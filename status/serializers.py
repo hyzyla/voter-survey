@@ -39,7 +39,7 @@ class StatusSerializer(serializers.ModelSerializer):
         options = validated_data.pop('options')
         instance.name = validated_data["name"]
         instance.type = validated_data["type"]
-        instance.is_static = validated_data["is_static"]
+        instance.is_static = validated_data.get("is_static", None)
 
         if validated_data['is_static'] and instance.stations:
             print("Clearing stations...")
