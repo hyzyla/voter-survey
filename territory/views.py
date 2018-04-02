@@ -8,6 +8,8 @@ from .serializers import RegionSerializer, DistrictSerializer, ConstituencySeria
 from django.core.exceptions import ObjectDoesNotExist
 from status.serializers import StatusSerializer
 from status.models import Status
+from voter.serializers import VoterSerializer
+from voter.models import Voter
 
 class RegionViewSet(viewsets.ModelViewSet):
     """
@@ -107,6 +109,27 @@ class ConstituencyViewSet(viewsets.ModelViewSet):
     """
     queryset = Constituency.objects.all()
     serializer_class = ConstituencySerializer
+
+
+    @detail_route()
+    def voters(self, request, pk=None):
+        """
+        Всі виборці даного округу
+        """
+        constituency = self.get_object()
+        voters = Voter.objects.filter(station__constituencies=constituency).distinct()
+        serializer = VoterSerializer(voters, context={'request': request}, many=True)
+        return Response(serializer.data)
+
+    @detail_route()
+    def statuses(self, request, pk=None):
+        """
+        Всі виборці даного округу
+        """
+        constituency = self.get_object()
+        statuses = Status.objects.filter(stations__constituencies=constituency).distinct()
+        serializer = StatusSerializer(statuses, context={'request': request}, many=True)
+        return Response(serializer.data)
 
     @detail_route()
     def stations(self, request, pk=None):

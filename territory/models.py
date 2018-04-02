@@ -22,8 +22,8 @@ class District(models.Model):
 class Constituency(models.Model):
     name = models.CharField(max_length=2048)
     description = models.CharField(max_length=8192)
-    year = models.PositiveIntegerField()
-    stations = models.ManyToManyField("PollingStation")
+    year = models.PositiveIntegerField(null=True)
+    stations = models.ManyToManyField("PollingStation", related_name="constituencies")
     #region = models.ForeignKey("Region", on_delete=models.CASCADE, related_name='constituencies')
 
 
@@ -33,11 +33,11 @@ class Constituency(models.Model):
 
 class PollingStation(models.Model):
     number = models.CharField(max_length=256)
-    description = models.TextField()
-    address = models.CharField(max_length=2048)
+    description = models.TextField(null=True)
+    address = models.CharField(max_length=2048, null=True)
     is_deprecated = models.BooleanField(default=False)
     district = models.ForeignKey("District", null=True, on_delete=models.SET_NULL, related_name='stations')
-    
+    #consituency = models.ForeignKey("Constituency", null=True, on_delete=models.SET_NULL, related_name='constituencies')
 
     def __str__(self):
         return f"{self.number}, {self.district}"
