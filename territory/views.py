@@ -36,17 +36,16 @@ class RegionViewSet(viewsets.ModelViewSet):
 
     @detail_route(methods=['post'], url_path='add-status')
     def add_status(self, request, pk=None):
-        """Додати статус до всі дільниць даної області"""
+        """Додати статус до всіх дільниць даної області"""
         region = self.get_object()
         status = Status.objects.get(pk=request.data['id'])
         
         # Робимо статус не статичним, оскільки хоча б одна дільниця міститеме даний статус
         status.is_static = False
+        stations = PollingStation.objects.filter(district__region=region)
+        status.stations.add(*stations)
         status.save()
-        for district in region.districts.all():
-            for station in district.stations.all():
-                station.statuses.add(status)
-                station.save()
+
         return Response()
 
     @detail_route(methods=['delete'], url_path='statuses')
@@ -78,11 +77,11 @@ class DistrictViewSet(viewsets.ModelViewSet):
         """Додає статус до даного району"""
         district = self.get_object()
         status = Status.objects.get(pk=request.data['id'])
+
         status.is_static = False
+        stations = PollingStation.objects.filter(district=district)
+        status.stations.add(*stations)
         status.save()
-        for station in district.stations.all():
-            station.statuses.add(status)
-            station.save()
         return Response()
 
     @detail_route(methods=['get'], url_path='region')
