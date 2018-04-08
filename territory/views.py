@@ -139,6 +139,26 @@ class ConstituencyViewSet(viewsets.ModelViewSet):
         serializer = PollingStationSerializer(constituency.stations.all(), context={'request': request}, many=True)
         return Response(serializer.data)
 
+    @detail_route(methods=['put'], url_path='add-region')
+    def add_region(self, request, pk=None):
+        """
+        Додати всі дільниці регіону до округу
+        """
+        constituency = self.get_object()
+        stations = PollingStation.objects.filter(district__region__pk=request.data['id'])
+        constituency.stations.add(*stations)
+        return Response()
+
+    @detail_route(methods=['put'], url_path='add-district')
+    def add_district(self, request, pk=None):
+        """
+        Додати всі дільниці району до округу
+        """
+        constituency = self.get_object()
+        stations = PollingStation.objects.filter(district__pk=request.data['id'])
+        constituency.stations.add(*stations)
+        return Response()
+
     @detail_route(methods=['put'], url_path='add-station')
     def add_station(self, request, pk=None):
         """
@@ -177,6 +197,20 @@ class PollingStationViewSet(viewsets.ModelViewSet):
         station = self.get_object()
         statuses = StatusSerializer(station.statuses.all(), context={'request': request}, many=True)
         return Response(statuses.data)
+
+    @detail_route(methods=['get'], url_path='voter-number')
+    def voter_number(self, request, pk=None):
+        """Повернути кількість виборців у даній дільниці"""
+        station = self.get_object()
+        return Response(station.voter_set.count())
+
+    @detail_route(methods=['post'], url_path='create-records')
+    def create_records(self, request, pk=None):
+        station = self.get_object()
+        amount = int(request.data)
+        station.voter_set.bulk_create([Voter(station=station) for i in range(amount)])
+        station.save()
+        return Response()
 
 
     @detail_route(methods=['delete'], url_path='delete-statuses')

@@ -21,7 +21,7 @@ class District(models.Model):
 
 class Constituency(models.Model):
     name = models.CharField(max_length=2048)
-    description = models.CharField(max_length=8192)
+    description = models.CharField(max_length=8192, blank=True, null=True)
     year = models.PositiveIntegerField(null=True)
     stations = models.ManyToManyField("PollingStation", related_name="constituencies")
     #region = models.ForeignKey("Region", on_delete=models.CASCADE, related_name='constituencies')
