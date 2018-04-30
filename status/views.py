@@ -3,6 +3,7 @@ from .models import Status, Option
 from rest_framework import viewsets
 from rest_framework.decorators import detail_route, list_route
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions
 
 from .serializers import StatusSerializer, OptionSerializer
 
@@ -10,6 +11,7 @@ class StatusViewSet(viewsets.ModelViewSet):
     """
     API для відображення і редагування статусів (атрибутів виборця).
     """
+    permission_classes = (IsAuthenticated, DjangoModelPermissions, )
     queryset = Status.objects.all()
     serializer_class = StatusSerializer
 

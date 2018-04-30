@@ -2,6 +2,7 @@
 from rest_framework import viewsets
 from rest_framework.decorators import detail_route
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions
 
 from .models import Region, District, Constituency, PollingStation
 from .serializers import RegionSerializer, DistrictSerializer, ConstituencySerializer, PollingStationSerializer
@@ -16,6 +17,7 @@ class RegionViewSet(viewsets.ModelViewSet):
     API для відображення і редагування областей.
     """
 
+    permission_classes = (IsAuthenticated, DjangoModelPermissions, )
     queryset = Region.objects.all()
     serializer_class = RegionSerializer
 
@@ -61,6 +63,8 @@ class DistrictViewSet(viewsets.ModelViewSet):
     """
     API для відображення і редагування районів.
     """
+
+    permission_classes = (IsAuthenticated, DjangoModelPermissions, )
     queryset = District.objects.all()
     serializer_class = DistrictSerializer
 
@@ -106,6 +110,8 @@ class ConstituencyViewSet(viewsets.ModelViewSet):
     Виборчий округ не є точним відображенням вибочого округу, 
     це просто список виборчих дільниць визначений користувачем
     """
+
+    permission_classes = (IsAuthenticated, DjangoModelPermissions, )
     queryset = Constituency.objects.all()
     serializer_class = ConstituencySerializer
 
@@ -188,6 +194,8 @@ class PollingStationViewSet(viewsets.ModelViewSet):
     """
     API для відображення і редагування виборчих дільниць.
     """
+
+    permission_classes = (IsAuthenticated, DjangoModelPermissions, )
     queryset = PollingStation.objects.all()
     serializer_class = PollingStationSerializer
     
