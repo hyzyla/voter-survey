@@ -30,7 +30,14 @@ class UserViewSet(viewsets.ModelViewSet):
     @list_route(methods=['get'], url_path='operators')
     def operators(self, request, pk=None):
         """Оператори """
-        operators = User.objects.filter(groups=Group.objects.all()[3])
+        operator_group = None
+        for group in Group.objects.all():
+            if 'оператор' in group.name.lower():
+                operator_group = group
+        if operator_group:  
+            operators = User.objects.filter(groups=operator_group)
+        else:
+            operators = []
         return Response(UserSerializer(operators, many=True).data)
 
 class GroupViewSet(viewsets.ModelViewSet):
