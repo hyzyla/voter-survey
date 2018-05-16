@@ -5,7 +5,7 @@ from django.contrib.auth.models import User, Group
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('username', 'email', 'groups', 'is_staff', 'is_superuser')
+        fields = ('id', 'username', 'email', 'groups', 'is_staff', 'is_superuser')
 
 
 class GroupSerializer(serializers.ModelSerializer):

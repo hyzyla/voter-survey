@@ -11,18 +11,24 @@ class VoterViewSet(viewsets.ModelViewSet):
     queryset = Voter.objects.all()
     serializer_class = VoterSerializer
 
-
-
-    def filter_queryset(self, queryset, user):
+    def filter(self, queryset, user):
         return queryset.filter(operators=user)
 
     def list(self, request, *args, **kwargs):
         user = request.user
-        operator = Group.objects.all()[3]
+        operator = Group.objects.all()[3] # Operator
 
         queryset = self.get_queryset()
         if operator in user.groups.all():
-            queryset = self.filter_queryset(queryset, user)
+            queryset = self.filter(queryset, user)
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+
+    
+    def create(self, request, *args, **kwargs):
+        response = super().create(request, *args, **kwargs)
+        voter_id = response.data['id']
+        voter = Voter.objects.get(id=voter_id)
+        voter.operators.add(request.user)
+        return response

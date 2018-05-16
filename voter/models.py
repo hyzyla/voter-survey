@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 class Voter(models.Model):
     station = models.ForeignKey("territory.PollingStation", on_delete=models.CASCADE, verbose_name="дільниця")
     attrib = DynamicField(spec={}, null=False, blank=False)
-    operators = models.ManyToManyField(User, related_name="voters")
+    operators = models.ManyToManyField(User, related_name="voters", null=True)
 
     class Meta:
         verbose_name = "виборець"
