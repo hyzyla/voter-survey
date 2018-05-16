@@ -16,7 +16,11 @@ class VoterViewSet(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         user = request.user
-        operator = Group.objects.all()[3] # Operator
+
+        operator = None
+        for group in Group.objects.all():
+            if 'оператор' in group.name.lower():
+                operator = group
 
         queryset = self.get_queryset()
         if operator in user.groups.all():

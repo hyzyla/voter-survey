@@ -34,6 +34,7 @@ class UserViewSet(viewsets.ModelViewSet):
         for group in Group.objects.all():
             if 'оператор' in group.name.lower():
                 operator_group = group
+                
         if operator_group:  
             operators = User.objects.filter(groups=operator_group)
         else:
