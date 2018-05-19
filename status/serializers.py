@@ -20,8 +20,7 @@ class StatusSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'type', 'is_static', 'options', 'station')
 
     options = OptionSerializer(many=True)
-    #options = serializers.SlugRelatedField(many=True, read_only=True, slug_field='name') 
-    #serializers.StringRelatedField(many=True)
+
 
     
     def create(self, validated_data):
@@ -33,16 +32,12 @@ class StatusSerializer(serializers.ModelSerializer):
         return status
 
     def update(self, instance, validated_data):
-        from pprint import pprint
-        pprint(validated_data)
-
         options = validated_data.pop('options')
         instance.name = validated_data["name"]
         instance.type = validated_data["type"]
         instance.is_static = validated_data.get("is_static", None)
 
         if validated_data.get("is_static", None) and instance.stations:
-            print("Clearing stations...")
             instance.stations.clear()
 
         Option.objects.filter(status=instance).delete()
@@ -50,5 +45,4 @@ class StatusSerializer(serializers.ModelSerializer):
             Option.objects.create(status=instance, **option)
         instance.save()
         return instance
-    #choises = PollingStation.objects.all()[:settings.REST_FRAMEWORK['HTML_SELECT_CUTOFF']]
-    #stations = serializers.ManyRelatedField()
+   

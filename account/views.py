@@ -20,6 +20,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
     @detail_route(methods=['post'], url_path='assign-voters')
     def assign_voters(self, request, pk=None):
+        # todo: неправильно працює, бо треба ще обирати оператора якому призначати цих виборців.
         user = self.get_object()
         voters_ids = request.data
         voters = Voter.objects.filter(id__in=voters_ids)
