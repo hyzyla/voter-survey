@@ -37,7 +37,7 @@ class RegionViewSet(viewsets.ModelViewSet):
 
 
     @detail_route(methods=['post'], url_path='add-status')
-    def     (self, request, pk=None):
+    def add_status (self, request, pk=None):
         """Додати статус до всіх дільниць даної області"""
         region = self.get_object()
         status = Status.objects.get(pk=request.data['id'])
